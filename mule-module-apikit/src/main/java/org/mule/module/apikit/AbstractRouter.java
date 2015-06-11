@@ -116,6 +116,13 @@ public abstract class AbstractRouter implements ApiRouter
         processUriParameters(resolvedVariables, resource, event);
 
         Flow flow = getFlow(resource, request);
+        // Mag tjs - insert 2 variables to aid in stats/api call tracking
+        event.getMessage().setInvocationProperty("apiKitUri", resource.getUri());
+        if (resource.getActions().size() > 0)
+        {
+            event.getMessage().setInvocationProperty("apiKitAction", resource.getActions().keySet().toArray()[0].toString());
+        }
+        // end Mag
         if (flow == null)
         {
             throw new ApikitRuntimeException("Flow not found for resource: " + resource);
